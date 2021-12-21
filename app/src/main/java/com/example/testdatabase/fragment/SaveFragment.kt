@@ -62,7 +62,7 @@ class SaveFragment : Fragment(), View.OnClickListener {
                     degree = degree.text.toString()
                 )
             )
-
+//a?
         }
     }
 
