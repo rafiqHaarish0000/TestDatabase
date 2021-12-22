@@ -22,6 +22,18 @@ class UserRepositary(context: Context) {
         }.start()
     }
 
+    fun deleteUserDetails(userDetails: UserDetails){
+        Thread{
+            userDao.getDeleteData(userDetails)
+        }.start()
+    }
+
+    fun updateUserDetails(userDetails: UserDetails){
+        Thread{
+            userDao.getUpdateUserDetails(userDetails)
+        }.start()
+    }
+
     companion object {
         fun getInstance(context: Context) = UserRepositary(context)
     }

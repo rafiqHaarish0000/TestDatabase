@@ -3,6 +3,7 @@ package com.example.testdatabase.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "SampleUserData")
 data class UserDetails(
@@ -12,5 +13,6 @@ data class UserDetails(
     var id: Int = 0,
     var experience: Int,
     var name: String,
-    var degree: String
+    var degree: String,
+    var flag:Boolean = false
 )

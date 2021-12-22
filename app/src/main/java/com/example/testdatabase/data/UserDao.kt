@@ -1,10 +1,7 @@
 package com.example.testdatabase.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface UserDao {
@@ -16,4 +13,10 @@ interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun getInsertData(vararg userDetails: UserDetails)
+
+    @Delete
+    fun getDeleteData(deleteUserDetails: UserDetails)
+
+    @Update
+    fun getUpdateUserDetails(updateDetails:UserDetails)
 }

@@ -9,9 +9,8 @@ class MainModel(private val repositary: UserRepositary) : ViewModel() {
 
     val userData = MutableLiveData<UserDetails>()
 
-    fun getAllUserData(): List<UserDetails> {
-      return  repositary.getUserRepos()
+    fun getAllUserData(): ArrayList<UserDetails> {
+      return  repositary.getUserRepos() as ArrayList
     }
-
 
 }
