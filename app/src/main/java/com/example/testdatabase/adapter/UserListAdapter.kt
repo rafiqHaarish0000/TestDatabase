@@ -1,25 +1,17 @@
 package com.example.testdatabase.adapter
 
 import android.content.Context
-import android.content.Intent
-import android.text.BoringLayout
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testdatabase.R
 import com.example.testdatabase.data.UserDetails
 import com.example.testdatabase.fragment.TAG
-import com.example.testdatabase.fragment.Update
-import kotlin.math.log
-import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.Observer
-import com.example.testdatabase.repositarty.UserRepositary
 
 
 class UserListAdapter(

@@ -19,9 +19,9 @@ import com.example.testdatabase.repositarty.UserRepositary
 import kotlinx.android.synthetic.main.list_item.*
 import java.util.*
 
-internal val TAG = SaveFragment::class.java.canonicalName
+internal val TAG = SaveUserDetailsFragment::class.java.canonicalName
 
-class SaveFragment : Fragment(), View.OnClickListener {
+class SaveUserDetailsFragment : Fragment(), View.OnClickListener {
 
     private lateinit var observer: Observer<UserDetails>
     private lateinit var viewModel: MainModel
@@ -42,25 +42,24 @@ class SaveFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(
-            this@SaveFragment,
+            this@SaveUserDetailsFragment,
             ViewModelFactory(requireContext())
         ).get(MainModel::class.java)
         setValues()
 
         val backArrow = view.findViewById(R.id.backArrow) as ImageView
-        val add = view.findViewById(R.id.saveButton) as Button
+        val btnAdd = view.findViewById(R.id.saveButton) as Button
 
         backArrow.setOnClickListener(this)
 
-        add.setOnClickListener {
-
+        btnAdd.setOnClickListener {
             getValidation(view)
         }
     }
 
 
     companion object {
-        fun getInstance() = SaveFragment()
+        fun getInstance() = SaveUserDetailsFragment()
     }
 
     override fun onClick(view: View) {
@@ -69,7 +68,7 @@ class SaveFragment : Fragment(), View.OnClickListener {
             R.id.backArrow -> {
                 requireActivity().supportFragmentManager.popBackStack()
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, AddFragment.getInstance())
+                    .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance())
                     .commit()
             }
         }
@@ -98,11 +97,12 @@ class SaveFragment : Fragment(), View.OnClickListener {
         val experience = view.findViewById(R.id.editTextTextPersonName3) as EditText
         val listOfValues = arrayListOf(name, degree, experience)
 
-        if (getDetails(listOfValues)) {
-            if (validationInfo(view)) {
-                getData(view)
-            }
-        }
+// Rework On It
+//        if (getDetails(listOfValues)) {
+//            if (validationInfo(view)) {
+//                getData(view)
+//            }
+//        }
 
     }
     private fun getData(view: View) {
@@ -122,11 +122,11 @@ class SaveFragment : Fragment(), View.OnClickListener {
             )
         )
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, AddFragment.getInstance())
+            .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance())
             .commit()
         message("Your details has been saved..!")
     }
-
+// rework
     private fun getDetails(listOfValues: ArrayList<EditText>): Boolean {
         var flag = true
         for (item in listOfValues) {
@@ -139,7 +139,7 @@ class SaveFragment : Fragment(), View.OnClickListener {
         }
         return flag
     }
-
+// rework
     private fun validationInfo(view: View): Boolean {
         val name = view.findViewById(R.id.editTextTextPersonName) as EditText
         val degree = view.findViewById(R.id.editTextTextPersonName2) as EditText

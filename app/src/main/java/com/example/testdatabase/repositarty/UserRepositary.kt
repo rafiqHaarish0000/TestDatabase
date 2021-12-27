@@ -29,9 +29,9 @@ class UserRepositary(context: Context) {
     }
 
     fun updateUserDetails(userDetails: UserDetails){
-        Thread{
-            userDao.getUpdateUserDetails(userDetails)
-        }.start()
+        return Executors.newSingleThreadExecutor().submit(Callable {
+                userDao.getUpdateUserDetails(userDetails)
+        }).get()
     }
 
     companion object {

@@ -14,7 +14,7 @@ import com.example.testdatabase.R
 import com.example.testdatabase.data.UserDetails
 import com.example.testdatabase.repositarty.UserRepositary
 
-class Update : Fragment() {
+class UpdateUserDetails : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +37,13 @@ class Update : Fragment() {
         val updateButton = view.findViewById<Button>(R.id.updateButton)
 
         arguments?.let {
-            userName.setText(it.getString("Name"))
-            userDegree.setText(it.getString("Degree"))
-//            expr.setText(it.getInt("Expr"))
+            userName.setText(it.getString("Name",""))
+            userDegree.setText(it.getString("Degree",""))
+            expr.setText(it.getInt("Expr",0).toString())
         }
 
         updateButton.setOnClickListener {
+
             val user = UserDetails(
                 name = userName.text.toString(),
                 degree = userDegree.text.toString(),
@@ -57,14 +58,14 @@ class Update : Fragment() {
             Log.i(TAG, "validationUser: " + validationInfo(user))
 
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AddFragment.getInstance())
+                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance())
                 .commit()
             message("Details updated")
         }
 
         backButton1.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AddFragment.getInstance())
+                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance())
                 .commit()
         }
         super.onViewCreated(view, savedInstanceState)
@@ -80,6 +81,6 @@ class Update : Fragment() {
     }
 
     companion object {
-        fun getInstance() = Update()
+        fun getInstance() = UpdateUserDetails()
     }
 }

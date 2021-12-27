@@ -9,7 +9,7 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.testdatabase.fragment.AddFragment">
+        android:name="com.example.testdatabase.fragment.AddUserDetailsFragment">
 
     </androidx.fragment.app.FragmentContainerView>
 </androidx.constraintlayout.widget.ConstraintLayout>
