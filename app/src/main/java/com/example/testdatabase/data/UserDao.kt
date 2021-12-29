@@ -17,6 +17,6 @@ interface UserDao {
     @Delete
     fun getDeleteData(deleteUserDetails: UserDetails)
 
-    @Update
-    fun getUpdateUserDetails(updateDetails:UserDetails)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun getUpdateUserDetails(vararg updateDetails:UserDetails)
 }

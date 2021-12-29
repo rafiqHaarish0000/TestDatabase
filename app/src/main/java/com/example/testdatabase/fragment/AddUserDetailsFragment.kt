@@ -33,21 +33,20 @@ class AddUserDetailsFragment : Fragment() {
                 bundle.putString("Name", item.name)
                 bundle.putString("Degree", item.degree)
                 bundle.putInt("Expr", item.experience.toString().toInt())
+                bundle.putInt("ID",item.id.toString().toInt())
 
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, UpdateUserDetails::class.java, bundle, "")
+                    .replace(R.id.fragmentContainer, UpdateUserDetails::class.java,bundle,"updateFragment")
                     .commit()
             }
 
             override fun onDeleteUserDetails(item: UserDetails) {
                 deleteUserDetails(item)
             }
-
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -73,9 +72,10 @@ class AddUserDetailsFragment : Fragment() {
 
         addButton.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, SaveUserDetailsFragment.getInstance())
+                .replace(R.id.fragmentContainer, SaveUserDetailsFragment.getInstance(),"savedFragment")
                 .commit()
         }
+
     }
 
     companion object {
@@ -83,9 +83,6 @@ class AddUserDetailsFragment : Fragment() {
     }
 
     private fun getAllListValues(view: View): Boolean {
-        val userRepositary = UserRepositary.getInstance(requireContext())
-
-//        userRepositary.getUserRepos()
 
         listAdapter = UserListAdapter(
             viewmodel.getAllUserData(),

@@ -1,7 +1,6 @@
 package com.example.testdatabase.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,8 @@ import com.example.testdatabase.data.UserDetails
 import com.example.testdatabase.repositarty.UserRepositary
 
 class UpdateUserDetails : Fragment() {
+
+    private var userDetailsId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,21 +31,27 @@ class UpdateUserDetails : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val backButton1 = view.findViewById<ImageView>(R.id.backArrow1)
         val userName = view.findViewById<EditText>(R.id.name)
         val userDegree = view.findViewById<EditText>(R.id.degree)
         val expr = view.findViewById<EditText>(R.id.experience)
         val updateButton = view.findViewById<Button>(R.id.updateButton)
 
+
         arguments?.let {
-            userName.setText(it.getString("Name",""))
-            userDegree.setText(it.getString("Degree",""))
-            expr.setText(it.getInt("Expr",0).toString())
+            userName.setText(it.getString("Name", ""))
+            userDegree.setText(it.getString("Degree", ""))
+            expr.setText(it.getInt("Expr", 0).toString())
+            userDetailsId = it.getInt("ID")
         }
+
 
         updateButton.setOnClickListener {
 
             val user = UserDetails(
+                id = userDetailsId,
                 name = userName.text.toString(),
                 degree = userDegree.text.toString(),
                 experience = if (expr.text.isEmpty()) {
@@ -53,28 +60,23 @@ class UpdateUserDetails : Fragment() {
                     expr.text.toString()
                 }.toInt()
             )
-            validationInfo(user)
-
-            Log.i(TAG, "validationUser: " + validationInfo(user))
+            val repo = UserRepositary.getInstance(requireContext())
+            repo.updateUserDetails(userDetails = user)
 
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance())
+                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance(),"addFragment")
                 .commit()
             message("Details updated")
         }
 
         backButton1.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance())
+                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance(),"addFragment")
                 .commit()
         }
-        super.onViewCreated(view, savedInstanceState)
+
     }
 
-    private fun validationInfo(item: UserDetails) {
-        val repo = UserRepositary.getInstance(requireContext())
-        repo.updateUserDetails(item)
-    }
 
     private fun message(msg: String) {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
