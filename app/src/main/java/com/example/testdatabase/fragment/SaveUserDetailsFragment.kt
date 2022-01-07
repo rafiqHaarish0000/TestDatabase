@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.testdatabase.R
-import com.example.testdatabase.data.UserDetails
-import com.example.testdatabase.mainmodel.MainModel
+import com.example.testdatabase.database.UserDetails
+import com.example.testdatabase.viewmodel.MainModel
 import com.example.testdatabase.repositarty.UserRepositary
 import kotlinx.android.synthetic.main.fragment_update.*
 import kotlinx.android.synthetic.main.list_item.*
@@ -54,13 +54,14 @@ class SaveUserDetailsFragment : Fragment(), View.OnClickListener {
         addbtn = view.findViewById(R.id.saveButton) as Button
 
         backArrowBtn.setOnClickListener(this)
-
         addbtn.setOnClickListener{
 
             if(validationInfo(view)){
+
                 val name = view.findViewById(R.id.editTextTextPersonName) as EditText
                 val degree = view.findViewById(R.id.editTextTextPersonName2) as EditText
                 val experience = view.findViewById(R.id.editTextTextPersonName3) as EditText
+
                 viewModel.userData.postValue(
                     UserDetails(
                         experience = if (experience.text.toString().isEmpty()) {

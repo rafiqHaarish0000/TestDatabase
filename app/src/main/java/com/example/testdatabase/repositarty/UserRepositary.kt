@@ -1,8 +1,8 @@
 package com.example.testdatabase.repositarty
 
 import android.content.Context
-import com.example.testdatabase.data.AppDatabase
-import com.example.testdatabase.data.UserDetails
+import com.example.testdatabase.database.AppDatabase
+import com.example.testdatabase.database.UserDetails
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
@@ -31,6 +31,12 @@ class UserRepositary(context: Context) {
     fun updateUserDetails(userDetails: UserDetails){
         return Executors.newSingleThreadExecutor().submit(Callable {
                 userDao.getUpdateUserDetails(userDetails)
+        }).get()
+    }
+
+    fun updateSearchUserDetails(name:String): List<UserDetails> {
+        return Executors.newSingleThreadExecutor().submit(Callable {
+            userDao.searchUserDetails(name)
         }).get()
     }
 

@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="9dp">
 
-            <ImageView
+            <com.example.testdatabase.customViewPager.CircleImageView
                 android:id="@+id/imageView"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Degree"
+                android:text="Domain"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />

@@ -10,17 +10,16 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testdatabase.R
-import com.example.testdatabase.data.UserDetails
+import com.example.testdatabase.database.UserDetails
 import com.example.testdatabase.fragment.TAG
 
 
 class UserListAdapter(
-    private var list: ArrayList<UserDetails>,
     var context: Context,
     val callback: onItemClickListener
 ) :
     RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
-
+    private var list: ArrayList<UserDetails> = ArrayList()
 
     class ViewHolder(itemView: View, private val callback: onItemClickListener) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -72,6 +71,12 @@ class UserListAdapter(
             notifyItemChanged(position)
         }
     }
+
+     fun resetView(filterData:List<UserDetails>) {
+        this.list = filterData as ArrayList<UserDetails>
+        notifyDataSetChanged()
+    }
+
 
     override fun getItemCount(): Int {
         return list.size

@@ -1,4 +1,4 @@
-package com.example.testdatabase.data
+package com.example.testdatabase.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
@@ -8,8 +8,8 @@ interface UserDao {
     @Query("SELECT * FROM sampleuserdata")
     fun getAll(): List<UserDetails>
 
-    @Query("SELECT * FROM sampleuserdata ORDER BY experience ASC")
-    fun getAllData(): LiveData<List<UserDetails>>
+    @Query("SELECT * FROM sampleuserdata WHERE name LIKE '%'||:userName||'%'")
+    fun searchUserDetails(userName: String): List<UserDetails>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun getInsertData(vararg userDetails: UserDetails)
@@ -18,5 +18,5 @@ interface UserDao {
     fun getDeleteData(deleteUserDetails: UserDetails)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun getUpdateUserDetails(vararg updateDetails:UserDetails)
+    fun getUpdateUserDetails(vararg updateDetails: UserDetails)
 }

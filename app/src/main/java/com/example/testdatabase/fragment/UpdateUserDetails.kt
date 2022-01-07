@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.testdatabase.R
-import com.example.testdatabase.data.UserDetails
+import com.example.testdatabase.database.UserDetails
 import com.example.testdatabase.repositarty.UserRepositary
 
 class UpdateUserDetails : Fragment() {
@@ -62,6 +62,8 @@ class UpdateUserDetails : Fragment() {
             )
             val repo = UserRepositary.getInstance(requireContext())
             repo.updateUserDetails(userDetails = user)
+
+
 
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance(),"addFragment")

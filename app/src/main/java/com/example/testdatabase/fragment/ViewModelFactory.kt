@@ -3,7 +3,7 @@ package com.example.testdatabase.fragment
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.testdatabase.mainmodel.MainModel
+import com.example.testdatabase.viewmodel.MainModel
 import com.example.testdatabase.repositarty.UserRepositary
 
 class ViewModelFactory internal constructor(private val context: Context) :
