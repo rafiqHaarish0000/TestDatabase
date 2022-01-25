@@ -9,12 +9,15 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.testdatabase.R
 import com.example.testdatabase.database.UserDetails
+import com.example.testdatabase.databinding.FragmentUpdateBinding
 import com.example.testdatabase.repositarty.UserRepositary
 
 class UpdateUserDetails : Fragment() {
-
+lateinit var binding:FragmentUpdateBinding
     private var userDetailsId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +28,9 @@ class UpdateUserDetails : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_update, container, false)
+    ): View {
+        binding = FragmentUpdateBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +52,6 @@ class UpdateUserDetails : Fragment() {
 
 
         updateButton.setOnClickListener {
-
             val user = UserDetails(
                 id = userDetailsId,
                 name = userName.text.toString(),
@@ -62,19 +64,12 @@ class UpdateUserDetails : Fragment() {
             )
             val repo = UserRepositary.getInstance(requireContext())
             repo.updateUserDetails(userDetails = user)
-
-
-
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance(),"addFragment")
-                .commit()
-            message("Details updated")
+            Navigation.findNavController(view).navigate(R.id.move_to_save_fragment)
+            message("Data saved..!")
         }
 
         backButton1.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance(),"addFragment")
-                .commit()
+            Navigation.findNavController(view).navigate(R.id.move_to_add_fragment)
         }
 
     }
@@ -84,7 +79,4 @@ class UpdateUserDetails : Fragment() {
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
 
-    companion object {
-        fun getInstance() = UpdateUserDetails()
-    }
 }

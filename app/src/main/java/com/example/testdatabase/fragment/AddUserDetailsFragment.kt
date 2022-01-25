@@ -10,21 +10,22 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testdatabase.R
 import com.example.testdatabase.adapter.UserListAdapter
 import com.example.testdatabase.database.UserDetails
-import com.example.testdatabase.viewmodel.MainModel
+import com.example.testdatabase.databinding.FragmentAddBinding
 import com.example.testdatabase.repositarty.UserRepositary
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.testdatabase.viewmodel.MainModel
 
 class AddUserDetailsFragment : Fragment() {
 
+    lateinit var binding: FragmentAddBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var listAdapter: UserListAdapter
     private lateinit var viewmodel: MainModel
-    private lateinit var searchText: EditText
 
 
     private val userListListener: UserListAdapter.onItemClickListener =
@@ -40,9 +41,10 @@ class AddUserDetailsFragment : Fragment() {
                 bundle.putInt("Expr", item.experience.toString().toInt())
                 bundle.putInt("ID", item.id.toString().toInt())
 
+
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(
-                        R.id.fragmentContainer,
+                        R.id.fragmentContainerView,
                         UpdateUserDetails::class.java,
                         bundle,
                         "updateFragment"
@@ -62,14 +64,14 @@ class AddUserDetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_add, container, false)
+    ): View {
+        binding = FragmentAddBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val addButton = view.findViewById<FloatingActionButton>(R.id.addButton)
-        searchBox(view)
+//        searchBox(view)
         viewmodel = ViewModelProvider(
             this@AddUserDetailsFragment,
             ViewModelFactory(requireContext())
@@ -81,30 +83,21 @@ class AddUserDetailsFragment : Fragment() {
             recyclerView.visibility = View.GONE
         }
 
-        addButton.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(
-                    R.id.fragmentContainer,
-                    SaveUserDetailsFragment.getInstance(),
-                    "savedFragment"
-                )
-                .commit()
+        binding.addbtn.setOnClickListener {
+
+            Navigation.findNavController(view).navigate(R.id.move_to_save_fragment)
+
         }
 
     }
 
-    companion object {
-        fun getInstance() = AddUserDetailsFragment()
-    }
 
     private fun getAllListValues(view: View): Boolean {
-
         listAdapter = UserListAdapter(
             requireContext(),
             callback = userListListener
         )
-
-        recyclerView = view.findViewById(R.id.recyclerList)
+        recyclerView = binding.recyclerList
 
         recyclerView.let {
             recyclerView.layoutManager =
@@ -120,28 +113,26 @@ class AddUserDetailsFragment : Fragment() {
         userRepo.deleteUserDetails(userDetails = item)
     }
 
-    private fun searchBox(view: View) {
-        searchText = view.findViewById(R.id.searchViewTxt)
-
-        searchText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun afterTextChanged(searchText: Editable) {
-                if (searchText.isNotEmpty()) {
-                    getSearchbyUserDetails(searchText.toString())
-                } else {
-                    getFilterSearchView()
-                }
-            }
-
-        })
-    }
+//    private fun searchBox(view: View) {
+//        binding.searchViewTxt.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//            }
+//
+//            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//            }
+//
+//            override fun afterTextChanged(searchText: Editable) {
+//                if (searchText.isNotEmpty()) {
+//                    getSearchbyUserDetails(searchText.toString())
+//                } else {
+//                    getFilterSearchView()
+//                }
+//            }
+//
+//        })
+//    }
 
     private fun getSearchbyUserDetails(searchText: String) {
         val userRepo = UserRepositary.getInstance(requireContext())
@@ -158,17 +149,6 @@ class AddUserDetailsFragment : Fragment() {
         }
     }
 
-
-
-//    private fun getSearchbyUserDetails(searchText:String){
-//        val searchText = searchText
-//        viewmodel.getSearchUserDetails(userName = searchText).observe(this@AddUserDetailsFragment, Observer {list->
-//            list?.let {
-//                Log.e("List = ", list.toString())
-//            }
-//
-//        })
-//    }
 
     override fun onResume() {
         super.onResume()

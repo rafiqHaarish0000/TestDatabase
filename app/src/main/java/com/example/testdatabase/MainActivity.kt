@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import com.example.testdatabase.databinding.ActivityMainBinding
 import com.example.testdatabase.fragment.AddUserDetailsFragment
 import com.example.testdatabase.fragment.SaveUserDetailsFragment
 import com.example.testdatabase.fragment.TAG
@@ -17,63 +19,13 @@ import kotlinx.coroutines.runBlocking
 import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var bundle: Bundle
-    private var arrayofFragment = arrayListOf<Fragment>()
-
+    lateinit var binding:ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        arrayofFragment = arrayListOf<Fragment>(
-            SaveUserDetailsFragment.getInstance(),
-            AddUserDetailsFragment.getInstance(),
-            UpdateUserDetails.getInstance()
-        )
-        if (savedInstanceState == null) {
-            isStart(AddUserDetailsFragment.getInstance(), this)
-        } else {
-            savedInstanceState.let {
-                if (it.getString("key", "").isNotEmpty()) {
-                    for (item in arrayofFragment) {
-                        if (it.getString("Key").equals(item.javaClass.canonicalName)) {
-                            isStart(item, this)
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun isStart(fragment: Fragment, context: Context) {
-        val supportFragmentManager = supportFragmentManager
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragmentContainer, fragment, "addFragment")
-        fragmentTransaction.commit()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        bundle = Bundle()
-        bundle.getString("key")
-        for (item in arrayofFragment) {
-            if (bundle.getString("Key").equals(item.javaClass.canonicalName)) {
-                isStart(item, this)
-                Log.i(TAG, "onDestroy: $item")
-            }
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        bundle = Bundle()
-        bundle.getString("key")
-        for (item in arrayofFragment) {
-            if (bundle.getString("Key").equals(item.javaClass.canonicalName)) {
-                isStart(item, this)
-                Log.i(TAG, "onDestroy: $item")
-            }
-        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val navHost = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navHost.navController
     }
 
     private fun showExitAlert(title: String, description: String) {
@@ -92,13 +44,11 @@ class MainActivity : AppCompatActivity() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
-
-    override fun onBackPressed() {
-        Log.i(TAG, "onBackPressed: " + "success")
-        showExitAlert("Exit", "Are you want to exit from this application?")
+        override fun onBackPressed() {
+            Log.i(TAG, "onBackPressed: " + "success")
+            showExitAlert("Exit","Do you want to close this application?")
+        }
 
     }
 
 
-
-}

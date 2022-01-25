@@ -1,7 +1,6 @@
 package com.example.testdatabase.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,35 +9,37 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.example.testdatabase.R
 import com.example.testdatabase.database.UserDetails
-import com.example.testdatabase.viewmodel.MainModel
+import com.example.testdatabase.databinding.FragmentSaveBinding
 import com.example.testdatabase.repositarty.UserRepositary
+import com.example.testdatabase.viewmodel.MainModel
 import kotlinx.android.synthetic.main.fragment_update.*
 import kotlinx.android.synthetic.main.list_item.*
 import java.util.*
 
 internal val TAG = SaveUserDetailsFragment::class.java.canonicalName
 
-class SaveUserDetailsFragment : Fragment(), View.OnClickListener {
-
-    private lateinit var observer: Observer<UserDetails>
+class SaveUserDetailsFragment : Fragment() {
+    lateinit var _binding: FragmentSaveBinding
+    private val binding get() = _binding
     private lateinit var viewModel: MainModel
-    private lateinit var addbtn:Button
-    private lateinit var backArrowBtn:ImageView
+    private lateinit var addbtn: Button
+    private lateinit var backArrowBtn: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+//        _binding = FragmentSaveBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_save, container, false)
+    ): View {
+        _binding = FragmentSaveBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,34 +49,44 @@ class SaveUserDetailsFragment : Fragment(), View.OnClickListener {
             this@SaveUserDetailsFragment,
             ViewModelFactory(requireContext())
         ).get(MainModel::class.java)
-        setValues()
+//        setValues()
 
         backArrowBtn = view.findViewById(R.id.backArrow) as ImageView
-        addbtn = view.findViewById(R.id.saveButton) as Button
 
-        backArrowBtn.setOnClickListener(this)
-        addbtn.setOnClickListener{
+        binding.backArrow.setOnClickListener {
+            Navigation.findNavController(view).popBackStack()
+        }
 
-            if(validationInfo(view)){
+
+        binding.saveButton.setOnClickListener {
+
+            if (validationInfo(view)) {
 
                 val name = view.findViewById(R.id.editTextTextPersonName) as EditText
                 val degree = view.findViewById(R.id.editTextTextPersonName2) as EditText
                 val experience = view.findViewById(R.id.editTextTextPersonName3) as EditText
 
-                viewModel.userData.postValue(
-                    UserDetails(
-                        experience = if (experience.text.toString().isEmpty()) {
-                            "0"
-                        } else {
-                            experience.text.toString()
-                        }.toInt(),
-                        name = name.text.toString(),
-                        degree = degree.text.toString()
+                viewModel.apply {
+
+                    userData.postValue(
+                        UserDetails(
+                            experience = if (experience.text.toString().isEmpty()) {
+                                "0"
+                            } else {
+                                experience.text.toString()
+                            }.toInt(),
+                            name = name.text.toString(),
+                            degree = degree.text.toString()
+                        )
                     )
-                )
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance(),"addFragment")
-                    .commit()
+
+                    userData.observe(viewLifecycleOwner, {
+                        val userRepositary = UserRepositary.getInstance(requireContext())
+                        userRepositary.insertUserDetails(userDetails = it)
+                    })
+                }
+
+                Navigation.findNavController(view).navigate(R.id.move_to_add_fragment)
                 message("Your details has been saved..!")
             }
         }
@@ -85,27 +96,7 @@ class SaveUserDetailsFragment : Fragment(), View.OnClickListener {
         fun getInstance() = SaveUserDetailsFragment()
     }
 
-    override fun onClick(view: View) {
 
-        when (view.id) {
-            R.id.backArrow -> {
-                requireActivity().supportFragmentManager.popBackStack()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, AddUserDetailsFragment.getInstance(),"addFragment")
-                    .commit()
-            }
-        }
-    }
-
-    private fun setValues() {
-        observer = Observer {
-            val userRepositary = UserRepositary.getInstance(requireContext())
-            userRepositary.insertUserDetails(userDetails = it)
-            Log.i(TAG, "setValues: $userRepositary")
-        }
-        viewModel.userData.observe(viewLifecycleOwner, observer)
-
-    }
 
     private fun validationInfo(view: View): Boolean {
 
